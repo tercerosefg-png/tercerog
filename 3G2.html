@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vida Saludable - Cuaderno Interactivo</title>
+    <style>
+        /* Variables de color */
+        :root {
+            --linea-azul: #d0e4f5;
+            --margen-rojo: #ffb6c1;
+            --morado: #5a2d9c;
+            --verde-claro: #b0dca2;
+            --texto: #1a1a1a;
+        }
+
+        body {
+            background-color: #e0e0e0;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Contenedor principal simulando la hoja del cuaderno */
+        .hoja-cuaderno {
+            background-color: #fdfdfd;
+            /* Líneas horizontales */
+            background-image: repeating-linear-gradient(transparent, transparent 24px, var(--linea-azul) 24px, var(--linea-azul) 25px);
+            width: 100%;
+            max-width: 800px;
+            min-height: 1000px;
+            position: relative;
+            padding: 30px 40px 40px 80px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        /* Margen rojo vertical */
+        .hoja-cuaderno::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 60px;
+            width: 2px;
+            height: 100%;
+            background-color: var(--margen-rojo);
+        }
+
+        /* Decoración de la espiral izquierda */
+        .espiral {
+            position: absolute;
+            left: 10px;
+            top: 30px;
+            bottom: 30px;
+            width: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+        .agujero {
+            width: 15px;
+            height: 15px;
+            background-color: #e0e0e0;
+            border-radius: 50%;
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Logotipo Scribé (esquina superior derecha) */
+        .logo-scribe {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 12px;
+            color: #a0a0a0;
+            border: 1px solid #a0a0a0;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Barra de navegación superior */
+        .barra-navegador {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid #333;
+            border-bottom: none;
+            padding: 5px 15px;
+            width: 60%;
+            margin-left: auto;
+            border-radius: 10px 10px 0 0;
+            background-color: #f0f0f0;
+        }
+        .nav-izq, .nav-der {
+            display: flex;
+            gap: 10px;
+        }
+        .icono-nav {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            cursor: pointer;
+            background-color: white;
+            border-radius: 3px;
+            user-select: none;
+            transition: background-color 0.2s;
+        }
+        .icono-nav:hover { background-color: var(--verde-claro); }
+
+        /* Título principal y Círculo */
+        .seccion-titulo {
+            position: relative;
+            margin-top: 30px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* Caja del título "La vi da Salu dable" */
+        .caja-titulo {
+            border: 3px solid #333;
+            padding: 15px;
+            width: 65%;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            background-color: var(--verde-claro); /* Fondo verde solicitado */
+            box-shadow: 3px 3px 0 #333;
+            transition: transform 0.2s;
+        }
+        .caja-titulo:hover { transform: scale(1.02); }
+
+        /* Círculo "vida saludable" */
+        .circulo-vida {
+            position: absolute;
+            left: 0;
+            top: -10px;
+            width: 120px;
+            height: 120px;
+            border: 3px dashed #333;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--verde-claro); /* Fondo verde solicitado */
+            cursor: pointer;
+            box-shadow: 3px 3px 0 #333;
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+        .circulo-vida:hover { transform: rotate(5deg) scale(1.05); background-color: #9cd18c; }
+        .circulo-vida span {
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1.1;
+            text-align: center;
+        }
+        .circulo-vida .linea-ondulada {
+            width: 60px;
+            height: 6px;
+            margin-top: 5px;
+            background-image: radial-gradient(circle, transparent 50%, #333 50%);
+            background-size: 10px 10px;
+            background-position: 0 0;
+        }
+
+        /* Zona Morada */
+        .zona-morada {
+            background-color: var(--morado);
+            border: 3px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            margin-top: 20px;
+            /* Efecto dibujado a mano */
+            clip-path: polygon(0 2%, 100% 0, 98% 100%, 2% 98%);
+        }
+
+        /* Fila de 3 pestañas blancas */
+        .fila-pestanas {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        .pestana {
+            background-color: white;
+            border: 2px solid #333;
+            border-radius: 8px;
+            height: 60px;
+            flex: 1;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.2s;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+            user-select: none;
+        }
+        .pestana:hover { background-color: #f0f0f0; transform: translateY(-2px); }
+        .pestana.activa { background-color: var(--verde-claro); box-shadow: inset 2px 2px 5px rgba(0,0,0,0.3); }
+
+        /* Cuadro central blanco */
+        .cuadro-central {
+            background-color: white;
+            border: 2px solid #333;
+            border-radius: 8px;
+            min-height: 80px;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 18px;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+            transition: background-color 0.3s;
+        }
+
+        /* Píldora inferior blanca */
+        .pildora-inferior {
+            background-color: white;
+            border: 2px solid #333;
+            border-radius: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .pildora-inferior:hover { background-color: #ffeaa7; transform: scale(1.02); }
+
+        /* Animación de pulso */
+        @keyframes pulso {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .animar { animation: pulso 0.3s ease; }
+
+    </style>
+</head>
+<body>
+
+    <div class="hoja-cuaderno">
+        <!-- Decoración de espiral -->
+        <div class="espiral">
+            <div class="agujero"></div>
+            <div class="agujero"></div>
+            <div class="agujero"></div>
+            <div class="agujero"></div>
+            <div class="agujero"></div>
+            <div class="agujero"></div>
+            <div class="agujero"></div>
+            <div class="agujero"></div>
+            <div class="agujero"></div>
+            <div class="agujero"></div>
+            <div class="agujero"></div>
+            <div class="agujero"></div>
+            <div class="agujero"></div>
+            <div class="agujero"></div>
+        </div>
+
+        <!-- Logotipo Scribé -->
+        <div class="logo-scribe">Scribé</div>
+
+        <!-- Barra de Navegador -->
+        <div class="barra-navegador">
+            <div class="nav-izq">
+                <div class="icono-nav" title="Atrás">&lt;</div>
+                <div class="icono-nav" title="Adelante">&gt;</div>
+            </div>
+            <div class="nav-der">
+                <div class="icono-nav" title="Inicio">🏠</div>
+                <div class="icono-nav" title="Configuración">⚙️</div>
+                <div class="icono-nav" title="Menú">☑️</div>
+            </div>
+        </div>
+
+        <!-- Título y Círculo -->
+        <div class="seccion-titulo">
+            <div class="circulo-vida" id="btnCirculo" title="Haz clic para un consejo">
+                <span>vida<br>saludable</span>
+                <div class="linea-ondulada"></div>
+            </div>
+            <div class="caja-titulo">La vi da Salu dable</div>
+        </div>
+
+        <!-- Zona Morada Interactiva -->
+        <div class="zona-morada">
+            <!-- Pestañas superiores -->
+            <div class="fila-pestanas">
+                <div class="pestana activa" data-tema="alimentacion">Alimentación</div>
+                <div class="pestana" data-tema="ejercicio">Ejercicio</div>
+                <div class="pestana" data-tema="descanso">Descanso</div>
+            </div>
+
+            <!-- Cuadro central de información -->
+            <div class="cuadro-central" id="displayInfo">
+                Selecciona una categoría arriba para ver información relevante.
+            </div>
+
+            <!-- Píldora inferior -->
+            <div class="pildora-inferior" id="btnPildora" title="Haz clic para más información">
+                🌟 Bienestar Integral
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript para la interactividad y la información -->
+    <script>
+        // Base de datos con información relevante
+        const informacion = {
+            alimentacion: "🥗 Una dieta equilibrada es la base de la salud. Incluye al menos 5 porciones de frutas y verduras al día. Evita los ultraprocesados y el exceso de azúcares.",
+            ejercicio: "🏃‍♂️ La OMS recomienda al menos 150 minutos de actividad física moderada a la semana. Caminar, nadar o bailar son excelentes opciones para mantener un corazón sano.",
+            descanso: "😴 Dormir entre 7 y 9 horas diarias es crucial. Un buen descanso mejora la memoria, regula las hormonas del estrés y fortalece el sistema inmunológico."
+        };
+
+        const consejosAleatorios = [
+            "💧 Bebe un vaso de agua al despertar para activar tu metabolismo.",
+            "🧘‍♀️ Practica 5 minutos de respiración profunda para reducir el estrés.",
+            "🚶‍♂️ Levántate y estira cada 45 minutos si trabajas sentado.",
+            "🍎 Come una fruta en lugar de un snack procesado a media tarde.",
+            "☀️ Toma 15 minutos de sol al día para sintetizar Vitamina D.",
+            "🧠 Mantén tu mente activa: lee, aprende algo nuevo o haz crucigramas."
+        ];
+
+        const pestanas = document.querySelectorAll('.pestana');
+        const displayInfo = document.getElementById('displayInfo');
+        const btnPildora = document.getElementById('btnPildora');
+        const btnCirculo = document.getElementById('btnCirculo');
+
+        // Función para mostrar la información del tema seleccionado
+        function mostrarInfo(tema) {
+            // Remover clase activa de todas
+            pestanas.forEach(p => p.classList.remove('activa'));
+            
+            // Activar la pestaña clickeada
+            const pestanaActiva = Array.from(pestanas).find(p => p.dataset.tema === tema);
+            if (pestanaActiva) pestanaActiva.classList.add('activa');
+
+            // Actualizar texto con efecto
+            displayInfo.style.opacity = '0';
+            setTimeout(() => {
+                displayInfo.textContent = informacion[tema] || "Información no disponible.";
+                displayInfo.style.opacity = '1';
+            }, 150);
+
+            // Efecto de animación visual
+            displayInfo.classList.add('animar');
+            setTimeout(() => displayInfo.classList.remove('animar'), 300);
+        }
+
+        // Asignar eventos a las pestañas
+        pestanas.forEach(pestana => {
+            pestana.addEventListener('click', () => {
+                mostrarInfo(pestana.dataset.tema);
+            });
+        });
+
+        // Interactividad de la píldora inferior (Consejo aleatorio)
+        btnPildora.addEventListener('click', () => {
+            const consejo = consejosAleatorios[Math.floor(Math.random() * consejosAleatorios.length)];
+            displayInfo.style.opacity = '0';
+            setTimeout(() => {
+                displayInfo.textContent = consejo;
+                displayInfo.style.opacity = '1';
+            }, 150);
+            
+            // Efecto visual en la píldora
+            btnPildora.style.backgroundColor = '#b0dca2';
+            setTimeout(() => btnPildora.style.backgroundColor = 'white', 300);
+        });
+
+        // Interactividad del Círculo Verde (Muestra un mensaje motivacional)
+        btnCirculo.addEventListener('click', () => {
+            displayInfo.style.opacity = '0';
+            setTimeout(() => {
+                displayInfo.textContent = "🌟 La salud no es solo la ausencia de enfermedades, es un estado de completo bienestar físico, mental y social.";
+                displayInfo.style.opacity = '1';
+            }, 150);
+            
+            // Animación de rotación temporal
+            btnCirculo.style.transform = 'rotate(360deg) scale(1.1)';
+            setTimeout(() => btnCirculo.style.transform = 'rotate(0deg) scale(1)', 500);
+        });
+
+        // Mostrar información inicial
+        mostrarInfo('alimentacion');
+    </script>
+
+</body>
+</html>

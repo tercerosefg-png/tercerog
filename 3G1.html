@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vida Saludable - Cuaderno Interactivo</title>
+    <style>
+        /* Estilos generales del cuaderno */
+        body {
+            background-color: #fdfdfd;
+            background-image: repeating-linear-gradient(transparent, transparent 24px, #a4d3ee 24px, #a4d3ee 25px);
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            position: relative;
+            min-height: 100vh;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        /* Línea roja vertical del margen */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 40px;
+            width: 2px;
+            height: 100%;
+            background-color: #ffb6c1;
+        }
+
+        .hoja-cuaderno {
+            width: 95%;
+            max-width: 900px;
+            position: relative;
+            padding-left: 20px;
+            padding-bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Barra superior azul */
+        .barra-superior {
+            background-color: #0055cc;
+            height: 35px;
+            border: 2px solid #000;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 15px;
+            gap: 8px;
+        }
+
+        .icono-cuadrado {
+            width: 15px;
+            height: 15px;
+            border: 2px solid #000;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .icono-cuadrado:hover { transform: scale(1.2); }
+        .icono-cuadrado:active { transform: scale(0.9); }
+        .naranja { background-color: #ff8c00; }
+        .amarillo { background-color: #ffd700; }
+        .rojo { background-color: #ff0000; }
+
+        /* Título principal */
+        .titulo {
+            border: 2px solid #000;
+            padding: 5px 15px;
+            font-size: 20px;
+            font-family: 'Comic Sans MS', sans-serif;
+            letter-spacing: 1px;
+            width: fit-content;
+            margin: 0 auto;
+            background-color: transparent;
+        }
+
+        /* Contenedor de las 3 columnas */
+        .contenido-principal {
+            display: flex;
+            gap: 15px;
+            position: relative;
+        }
+
+        .columna {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .izquierda { flex: 1; }
+        .centro { flex: 1.4; align-items: center; }
+        .derecha { flex: 1; }
+
+        /* Etiquetas y cajas de texto interactivas */
+        .fila-etiquetas {
+            display: flex;
+            gap: 5px;
+            justify-content: space-between;
+        }
+        .etiqueta {
+            border: 2px solid #000;
+            padding: 2px 5px;
+            font-size: 12px;
+            text-align: center;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .etiqueta:hover { background-color: #e0f0ff; }
+        .etiqueta.activa { background-color: #b0dca2; box-shadow: 2px 2px 0 #000; }
+
+        /* Cajas de dibujos */
+        .caja-dibujo {
+            border: 2px solid #000;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.2s;
+            background-color: transparent;
+        }
+        .caja-dibujo:hover { background-color: rgba(0,0,0,0.05); }
+        .caja-dibujo:active { transform: scale(0.95); }
+        
+        .caja-grande {
+            border: 2px solid #000;
+            width: 100%;
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Formas y dibujos */
+        .cruz-verde {
+            width: 80px;
+            height: 80px;
+            background-color: #00a000;
+            border: 2px solid #000;
+            margin: 5px auto;
+            clip-path: polygon(30% 0, 70% 0, 70% 30%, 100% 30%, 100% 70%, 70% 70%, 70% 100%, 30% 100%, 30% 70%, 0 70%, 0 30%, 30% 30%);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .cruz-verde:hover { transform: scale(1.05); }
+
+        .corazon-verde {
+            color: #00a000;
+            font-size: 40px;
+            line-height: 1;
+            text-align: center;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, color 0.3s;
+        }
+        .corazon-verde:hover { transform: scale(1.1); }
+
+        .corazon-pequeno {
+            color: #00a000;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .circulo-rojo {
+            background-color: #ff0000;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+        .circulo-rojo:hover { transform: scale(1.1); background-color: #cc0000; }
+
+        .fila-iconos-centro {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+
+        .arbol-verde {
+            width: 50px;
+            height: 70px;
+            background-color: #00a000;
+            border: 2px solid #000;
+            margin: 0 auto;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        .forma-marron {
+            width: 80px;
+            height: 100px;
+            background-color: #4a2c0f;
+            border: 2px solid #000;
+            border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%;
+            align-self: flex-end;
+            margin-top: -20px;
+        }
+
+        /* Fila de etiquetas inferior interactivas */
+        .fila-inferior {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .etiqueta-inferior {
+            border: 2px solid #000;
+            padding: 5px 10px;
+            font-size: 14px;
+            text-align: center;
+            flex: 1;
+            background-color: transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .etiqueta-inferior:hover { background-color: #e0f0ff; }
+        .etiqueta-inferior.activa { background-color: #b0dca2; box-shadow: 2px 2px 0 #000; }
+
+        /* Cuadro de texto grande */
+        .cuadro-texto {
+            border: 2px solid #000;
+            padding: 15px;
+            font-size: 16px;
+            line-height: 1.6;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: transparent;
+            min-height: 120px;
+            transition: background-color 0.3s;
+            cursor: text;
+        }
+        .cuadro-texto:focus {
+            outline: 2px dashed #0055cc;
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Manchas naranjas decorativas */
+        .mancha-naranja-izq {
+            position: absolute;
+            bottom: -20px;
+            left: -30px;
+            width: 60px;
+            height: 120px;
+            background-color: #ff5500;
+            border: 2px solid #000;
+            border-radius: 50% 50% 0 0;
+            transform: rotate(15deg);
+            z-index: -1;
+        }
+        .mancha-naranja-der {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            width: 80px;
+            height: 150px;
+            background-color: #ff5500;
+            border: 2px solid #000;
+            border-radius: 50% 50% 0 0;
+            transform: rotate(-10deg);
+            z-index: -1;
+        }
+
+        /* Dibujos con unicode */
+        .dibujo-jabon::after { content: '🧴'; font-size: 28px; }
+        .dibujo-cara-triste::after { content: '☹'; font-size: 30px; }
+        .dibujo-ejercicio::after { content: '🏃'; font-size: 28px; }
+        .dibujo-cara-feliz::after { content: '😀'; font-size: 28px; }
+        .dibujo-persona::after { content: '🚶‍♂️'; font-size: 50px; }
+
+        .columna.izquierda .caja-dibujo { margin: 0 auto; }
+        .columna.derecha .caja-dibujo { margin: 0 auto; }
+        .columna.izquierda .corazon-verde { margin-top: 0; }
+        .columna.derecha .forma-marron { margin-right: -10px; margin-top: -30px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="hoja-cuaderno">
+        <!-- Barra superior -->
+        <div class="barra-superior">
+            <div class="icono-cuadrado naranja" title="Minimizar"></div>
+            <div class="icono-cuadrado amarillo" title="Maximizar"></div>
+            <div class="icono-cuadrado rojo" title="Cerrar"></div>
+        </div>
+
+        <!-- Título -->
+        <div class="titulo">la vida saludable.com mx</div>
+
+        <!-- Contenido de 3 columnas -->
+        <div class="contenido-principal">
+            
+            <!-- Columna Izquierda -->
+            <div class="columna izquierda">
+                <div class="fila-etiquetas">
+                    <div class="etiqueta" data-tema="higiene">Higiene</div>
+                    <div class="etiqueta" data-tema="pantalla">Tiempo en pantalla</div>
+                </div>
+                <div class="cruz-verde" title="Cruz Verde" onclick="mostrarConsejo()"></div>
+                <div class="caja-dibujo dibujo-jabon" title="Jabón"></div>
+                <div class="caja-dibujo dibujo-cara-triste" title="Cara Triste"></div>
+                <div class="corazon-verde" title="Emociones" onclick="actualizarTexto('emociones')">♥</div>
+            </div>
+
+            <!-- Columna Central -->
+            <div class="columna centro">
+                <div class="fila-iconos-centro">
+                    <span class="corazon-pequeno" onclick="actualizarTexto('emociones')">♥</span>
+                    <div class="circulo-rojo" onclick="mostrarConsejo()">+</div>
+                    <span class="corazon-pequeno" onclick="actualizarTexto('emociones')">♥</span>
+                </div>
+                <div class="caja-grande">
+                    <div class="dibujo-persona"></div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha -->
+            <div class="columna derecha">
+                <div class="fila-etiquetas">
+                    <div class="etiqueta" data-tema="peso">Sobrepeso</div>
+                    <div class="etiqueta" data-tema="emociones">Emociones</div>
+                </div>
+                <div class="arbol-verde" title="Árbol" onclick="actualizarTexto('comer')"></div>
+                <div class="caja-dibujo dibujo-ejercicio" title="Ejercicio" onclick="actualizarTexto('ejercicio')"></div>
+                <div class="caja-dibujo dibujo-cara-feliz" title="Cara Feliz" onclick="actualizarTexto('emociones')"></div>
+                <div class="forma-marron" title="Forma Marrón"></div>
+            </div>
+
+        </div>
+
+        <!-- Fila de etiquetas inferiores -->
+        <div class="fila-inferior">
+            <div class="etiqueta-inferior" data-tema="sueno">Sueño</div>
+            <div class="etiqueta-inferior" data-tema="ejercicio">Ejercicio</div>
+            <div class="etiqueta-inferior" data-tema="comer">Comer</div>
+            <div class="etiqueta-inferior" data-tema="hidratacion">Hidratación</div>
+        </div>
+
+        <!-- Cuadro de texto grande (Editable) -->
+        <div class="cuadro-texto" id="cuadroTexto" contenteditable="true" title="Haz clic para editar o selecciona un tema arriba">
+            Las personas que tienen una vida saludable consumen alimentos nutritivos, hacen ejercicio, duermen 8 horas al día controlan sus emociones y usan adecuadamente la tecnología
+        </div>
+
+        <!-- Manchas naranjas decorativas -->
+        <div class="mancha-naranja-izq"></div>
+        <div class="mancha-naranja-der"></div>
+
+    </div>
+
+    <!-- JavaScript para la interactividad y la información -->
+    <script>
+        // Base de datos con información relevante para cada tema
+        const informacionSalud = {
+            'higiene': 'La higiene personal es fundamental para prevenir enfermedades. Lavarse las manos frecuentemente, ducharse a diario y mantener limpio el entorno nos protege de virus y bacterias.',
+            'pantalla': 'El uso excesivo de dispositivos electrónicos afecta la vista, el sueño y la salud mental. Se recomienda limitar el tiempo de pantalla a menos de 2 horas diarias para actividades recreativas.',
+            'peso': 'Mantener un peso adecuado reduce el riesgo de enfermedades cardíacas y diabetes. Se logra combinando una dieta balanceada con actividad física regular.',
+            'sueno': 'Dormir entre 7 y 9 horas diarias es esencial para restaurar el cuerpo y la mente. Un buen descanso mejora la memoria, el estado de ánimo y el sistema inmunológico.',
+            'ejercicio': 'Realizar al menos 30 minutos de actividad física al día fortalece los músculos, mejora la circulación y libera endorfinas, conocidas como las hormonas de la felicidad.',
+            'comer': 'Una alimentación saludable debe incluir frutas, verduras, proteínas magras y granos enteros. Evitar los ultraprocesados y el exceso de azúcar es clave para sentirse bien.',
+            'hidratacion': 'Beber suficiente agua (alrededor de 2 litros al día) es vital para el funcionamiento de los riñones, la regulación de la temperatura corporal y la digestión.',
+            'emociones': 'La salud mental es tan importante como la física. Gestionar las emociones, practicar la gratitud y buscar apoyo cuando sea necesario mejora nuestra calidad de vida.'
+        };
+
+        const cuadroTexto = document.getElementById('cuadroTexto');
+        const todasLasEtiquetas = document.querySelectorAll('.etiqueta, .etiqueta-inferior');
+
+        // Función para actualizar el texto y marcar la etiqueta activa
+        function actualizarTexto(tema) {
+            // Remover clase activa de todas
+            todasLasEtiquetas.forEach(e => e.classList.remove('activa'));
+            
+            // Buscar la etiqueta clickeada y activarla
+            const etiquetaActiva = Array.from(todasLasEtiquetas).find(e => e.dataset.tema === tema);
+            if (etiquetaActiva) etiquetaActiva.classList.add('activa');
+
+            // Actualizar el cuadro de texto con la información
+            if (informacionSalud[tema]) {
+                cuadroTexto.textContent = informacionSalud[tema];
+                // Efecto visual de actualización
+                cuadroTexto.style.backgroundColor = 'rgba(176, 220, 162, 0.3)';
+                setTimeout(() => cuadroTexto.style.backgroundColor = 'transparent', 500);
+            }
+        }
+
+        // Asignar el evento click a todas las etiquetas
+        todasLasEtiquetas.forEach(etiqueta => {
+            etiqueta.addEventListener('click', () => {
+                const tema = etiqueta.dataset.tema;
+                if (tema) actualizarTexto(tema);
+            });
+        });
+
+        // Función para el botón central "+" y la Cruz Verde
+        function mostrarConsejo() {
+            const consejos = [
+                "Consejo: Bebe un vaso de agua al despertar para activar tu metabolismo.",
+                "Consejo: Haz una pausa activa de 5 minutos por cada hora que pases sentado.",
+                "Consejo: Intenta dormir siempre a la misma hora para regular tu reloj biológico.",
+                "Consejo: Agrega al menos una fruta o verdura a cada comida del día.",
+                "Consejo: Practica la respiración profunda para reducir el estrés."
+            ];
+            const consejoAleatorio = consejos[Math.floor(Math.random() * consejos.length)];
+            
+            cuadroTexto.textContent = "✨ " + consejoAleatorio;
+            cuadroTexto.style.backgroundColor = 'rgba(255, 215, 0, 0.3)'; // Fondo amarillo suave temporal
+            setTimeout(() => cuadroTexto.style.backgroundColor = 'transparent', 800);
+
+            // Quitar active de las etiquetas al mostrar un consejo general
+            todasLasEtiquetas.forEach(e => e.classList.remove('activa'));
+        }
+
+        // Interactividad de los botones de la barra superior
+        document.querySelector('.naranja').addEventListener('click', () => alert('Simulación: Minimizando ventana...'));
+        document.querySelector('.amarillo').addEventListener('click', () => alert('Simulación: Maximizando ventana...'));
+        document.querySelector('.rojo').addEventListener('click', () => alert('Simulación: Cerrando ventana...'));
+
+        // Interactividad visual en los corazones pequeños y grandes (cambio de color temporal)
+        const corazones = document.querySelectorAll('.corazon-verde, .corazon-pequeno');
+        corazones.forEach(corazon => {
+            corazon.addEventListener('click', (e) => {
+                // Cambiar color a rojo temporalmente
+                corazon.style.color = 'red';
+                setTimeout(() => corazon.style.color = '#00a000', 300);
+                // Actualizar el texto sobre emociones si no se ha hecho ya
+                actualizarTexto('emociones');
+            });
+        });
+    </script>
+
+</body>
+</html>
